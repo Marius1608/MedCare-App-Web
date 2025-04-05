@@ -1,0 +1,68 @@
+src/
+├── api/
+│   ├── api.ts                    # Axios configuration
+│   ├── auth.api.ts               # Authentication API calls
+│   ├── user.api.ts               # User management API calls
+│   ├── doctor.api.ts             # Doctor management API calls
+│   ├── service.api.ts            # Medical service API calls
+│   ├── appointment.api.ts        # Appointment API calls
+│   └── report.api.ts             # Report API calls
+├── components/
+│   ├── layout/
+│   │   ├── MainLayout.tsx        # Main layout with sidebar and header
+│   │   ├── AdminLayout.tsx       # Admin-specific layout
+│   │   └── ReceptionistLayout.tsx # Receptionist-specific layout
+│   ├── common/
+│   │   ├── ConfirmDialog.tsx     # Reusable confirmation dialog
+│   │   ├── LoadingSpinner.tsx    # Loading indicator
+│   │   ├── ErrorAlert.tsx        # Error message display
+│   │   └── FormElements.tsx      # Common form elements
+│   ├── user/
+│   │   ├── UserList.tsx          # User listing component
+│   │   └── UserForm.tsx          # User create/edit form
+│   ├── doctor/
+│   │   ├── DoctorList.tsx        # Doctor listing component
+│   │   └── DoctorForm.tsx        # Doctor create/edit form
+│   ├── service/
+│   │   ├── ServiceList.tsx       # Service listing component
+│   │   └── ServiceForm.tsx       # Service create/edit form
+│   ├── appointment/
+│   │   ├── AppointmentList.tsx   # Appointment listing component
+│   │   └── AppointmentForm.tsx   # Appointment create/edit form
+│   └── report/
+│       ├── ReportFilter.tsx      # Report filtering options
+│       └── ReportView.tsx        # Report visualization
+├── contexts/
+│   ├── AuthContext.tsx           # Authentication context
+│   └── AlertContext.tsx          # Global alerts/notifications
+├── hooks/
+│   ├── useAuth.ts                # Authentication hook
+│   ├── useApi.ts                 # API request hook
+│   └── useAlerts.ts              # Alerts/notifications hook
+├── pages/
+│   ├── auth/
+│   │   └── Login.tsx             # Login page
+│   ├── admin/
+│   │   ├── Dashboard.tsx         # Admin dashboard
+│   │   ├── UserManagement.tsx    # User management page
+│   │   ├── DoctorManagement.tsx  # Doctor management page
+│   │   ├── ServiceManagement.tsx # Service management page
+│   │   └── Reports.tsx           # Reports page
+│   └── receptionist/
+│       ├── Dashboard.tsx         # Receptionist dashboard
+│       └── AppointmentManagement.tsx # Appointment management page
+├── types/
+│   ├── user.types.ts             # User-related types
+│   ├── doctor.types.ts           # Doctor-related types
+│   ├── service.types.ts          # Medical service types
+│   ├── appointment.types.ts      # Appointment types
+│   └── report.types.ts           # Report types
+├── utils/
+│   ├── auth.utils.ts             # Authentication utilities
+│   ├── date.utils.ts             # Date formatting utilities
+│   └── validation.utils.ts       # Form validation utilities
+├── theme/
+│   └── index.ts                  # Material UI theme configuration
+├── App.tsx                       # Main application component
+├── index.tsx                     # Entry point
+└── routes.tsx                    # Application routes
