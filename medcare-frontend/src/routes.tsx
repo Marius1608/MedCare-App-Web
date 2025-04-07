@@ -17,29 +17,29 @@ import Reports from './pages/admin/Reports';
 import ReceptionistDashboard from './pages/receptionist/Dashboard';
 import AppointmentManagement from './pages/receptionist/AppointmentManagement';
 
-// Auth provider hook
-import useAuth from './hooks/useAuth';
+// Define the UserRole type
+type UserRole = 'ADMIN' | 'RECEPTIONIST';
 
-// Import the UserRole enum
-import { UserRole } from './types/user.types';
-
-// Auth guard component
+// Define props interface for AuthGuard
 interface AuthGuardProps {
   children: React.ReactElement;
   allowedRoles: UserRole[];
 }
 
+// Auth guard component with proper type annotations
 const AuthGuard: React.FC<AuthGuardProps> = ({ children, allowedRoles }) => {
-  const { isAuthenticated, user } = useAuth();
-
-  if (!isAuthenticated) {
+  const userStr = localStorage.getItem('user');
+  if (!userStr) {
+    console.log("No user found in localStorage, redirecting to login");
     return <Navigate to="/login" />;
   }
-
-  if (user && !allowedRoles.includes(user.role as UserRole)) {
+  
+  const user = JSON.parse(userStr);
+  if (!allowedRoles.includes(user.role)) {
+    console.log("User role not allowed:", user.role);
     return <Navigate to="/unauthorized" />;
   }
-
+  
   return children;
 };
 
@@ -60,7 +60,7 @@ export const routes: RouteObject[] = [
   {
     path: '/admin',
     element: (
-      <AuthGuard allowedRoles={[UserRole.ADMIN]}>
+      <AuthGuard allowedRoles={['ADMIN']}>
         <MainLayout />
       </AuthGuard>
     ),
@@ -76,7 +76,7 @@ export const routes: RouteObject[] = [
   {
     path: '/receptionist',
     element: (
-      <AuthGuard allowedRoles={[UserRole.RECEPTIONIST, UserRole.ADMIN]}>
+      <AuthGuard allowedRoles={['RECEPTIONIST', 'ADMIN']}>
         <MainLayout />
       </AuthGuard>
     ),

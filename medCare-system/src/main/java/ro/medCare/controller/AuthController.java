@@ -8,7 +8,6 @@ import ro.medCare.dto.LoginRequest;
 import ro.medCare.dto.LoginResponse;
 import ro.medCare.exception.ValidationException;
 import ro.medCare.model.User;
-import ro.medCare.service.JwtTokenService;
 import ro.medCare.service.UserService;
 
 @RestController
@@ -17,30 +16,25 @@ import ro.medCare.service.UserService;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtTokenService jwtTokenService;
 
     @Autowired
-    public AuthController(UserService userService, JwtTokenService jwtTokenService) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.jwtTokenService = jwtTokenService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            // Autentificare prin UserService
+            // Authenticate using UserService
             User user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
-            // Generare token JWT
-            String token = jwtTokenService.generateToken(user);
-
-            // Construire și returnare răspuns
+            // Build response
             LoginResponse response = new LoginResponse(
                     user.getId(),
                     user.getUsername(),
                     user.getName(),
                     user.getRole(),
-                    token
+                    "dummy-token" 
             );
 
             return ResponseEntity.ok(response);

@@ -1,5 +1,6 @@
 // src/contexts/AuthContext.tsx
 import React, { createContext, useState, useEffect } from 'react';
+import { login as apiLogin } from '../api/auth.api'; // Import your auth API
 
 type User = {
   id: number;
@@ -10,7 +11,6 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
   login: (username: string, password: string) => Promise<void>;
@@ -21,7 +21,6 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  token: null,
   loading: false,
   error: null,
   login: async () => {},
@@ -32,18 +31,15 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   
   // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
     
-    if (storedUser && storedToken) {
+    if (storedUser) {
       setUser(JSON.parse(storedUser));
-      setToken(storedToken);
     }
   }, []);
 
@@ -52,40 +48,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
     
     try {
-      // For now, simulate a login since we don't have the API function
-      // Replace this with your actual API call
-      setTimeout(() => {
-        const userData = { id: 1, username, name: "Admin User", role: "ADMIN" as const };
-        const tokenData = "fake-jwt-token";
-        
-        setUser(userData);
-        setToken(tokenData);
-        
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', tokenData);
-        setLoading(false);
-      }, 1000);
+      const response = await apiLogin(username, password);
+      
+      // Extract the user data
+      const userData = {
+        id: response.data.id,
+        username: response.data.username,
+        name: response.data.name,
+        role: response.data.role
+      };
+      
+      setUser(userData);
+      
+      // Store user in localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      console.log("Login successful:", userData);
+      
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      console.error("Login error:", err);
+      setError(err.response?.data?.message || 'Login failed');
+      throw err;
+    } finally {
       setLoading(false);
     }
   };
 
   const logout = () => {
     setUser(null);
-    setToken(null);
     localStorage.removeItem('user');
-    localStorage.removeItem('token');
   };
 
-  const isAuthenticated = !!user && !!token;
+  const isAuthenticated = !!user;
   const isAdmin = isAuthenticated && user?.role === 'ADMIN';
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        token,
         loading,
         error,
         login,

@@ -1,6 +1,6 @@
-// src/pages/auth/Login.tsx
+// src/pages/auth/LoginSimple.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Avatar,
   Button,
@@ -10,42 +10,51 @@ import {
   Grid,
   Typography,
   Alert,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useAuth from '../../hooks/useAuth';
 
-const Login: React.FC = () => {
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+
+const LoginSimple: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [localError, setLocalError] = useState('');
-  const { login, loading, error } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLocalError('');
-    
+    setLoading(true);
+    setError(null);
+
     try {
-      await login(username, password);
+      // Direct API call without using hooks or context
+      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       
-      // Get the user from localStorage after login
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        const user = JSON.parse(userStr);
-        console.log("Navigating based on role:", user.role);
-        
-        if (user.role === 'ADMIN') {
-          navigate('/admin/dashboard');
-        } else if (user.role === 'RECEPTIONIST') {
-          navigate('/receptionist/dashboard');
-        }
-      } else {
-        setLocalError('User data not found after login');
+      console.log('Login response:', response.data);
+      
+      // Extract data from response
+      const { token, id, name, role } = response.data;
+      
+      // Store in localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({ id, username, name, role }));
+      
+      console.log('User role for redirect:', role);
+      
+      // Force redirect based on role
+      if (role === 'ADMIN') {
+        console.log('Redirecting to admin dashboard');
+        window.location.href = '/admin/dashboard';
+      } else if (role === 'RECEPTIONIST') {
+        console.log('Redirecting to receptionist dashboard');
+        window.location.href = '/receptionist/dashboard';
       }
     } catch (err: any) {
-      console.error("Login submission error:", err);
-      setLocalError(err.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(err.response?.data || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +68,8 @@ const Login: React.FC = () => {
         sx={{
           backgroundImage: 'url(https://source.unsplash.com/random?healthcare)',
           backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -77,16 +88,14 @@ const Login: React.FC = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in to MedCare
           </Typography>
-          
-          {(localError || error) && (
-            <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
-              {localError || error}
-            </Alert>
-          )}
-          
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
             <TextField
               margin="normal"
               required
@@ -98,7 +107,6 @@ const Login: React.FC = () => {
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              disabled={loading}
             />
             <TextField
               margin="normal"
@@ -111,20 +119,28 @@ const Login: React.FC = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, position: 'relative' }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Sign In'}
+              Sign In
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    marginTop: '-12px',
+                    marginLeft: '-12px',
+                  }}
+                />
+              )}
             </Button>
-            <Typography variant="body2" color="text.secondary" align="center">
-              Default credentials: admin / admin123
-            </Typography>
           </Box>
         </Box>
       </Grid>
@@ -132,4 +148,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginSimple;
