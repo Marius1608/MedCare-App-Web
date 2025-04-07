@@ -111,7 +111,6 @@ const DoctorForm: React.FC<DoctorFormProps> = ({ open, doctor, onClose }) => {
       try {
         const doctorData = {
           ...values,
-          // If workHours was updated through the time pickers
           workHours: startTime && endTime 
             ? `${format(startTime, 'HH:mm')}-${format(endTime, 'HH:mm')}` 
             : values.workHours,
@@ -132,7 +131,6 @@ const DoctorForm: React.FC<DoctorFormProps> = ({ open, doctor, onClose }) => {
     },
   });
 
-  // Update form workHours when time pickers change
   React.useEffect(() => {
     if (startTime && endTime) {
       const workHours = `${format(startTime, 'HH:mm')}-${format(endTime, 'HH:mm')}`;

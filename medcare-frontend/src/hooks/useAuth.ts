@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { login as apiLogin } from '../api/auth.api';
 
-// Define a user type
 interface User {
   id: number;
   username: string;
@@ -17,7 +16,6 @@ export function useAuth() {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    // Load user from localStorage on mount
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     

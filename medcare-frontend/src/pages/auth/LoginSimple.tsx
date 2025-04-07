@@ -28,21 +28,17 @@ const LoginSimple: React.FC = () => {
     setError(null);
 
     try {
-      // Direct API call without using hooks or context
-      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       
+      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       console.log('Login response:', response.data);
       
-      // Extract data from response
       const { token, id, name, role } = response.data;
       
-      // Store in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify({ id, username, name, role }));
       
       console.log('User role for redirect:', role);
       
-      // Force redirect based on role
       if (role === 'ADMIN') {
         console.log('Redirecting to admin dashboard');
         window.location.href = '/admin/dashboard';

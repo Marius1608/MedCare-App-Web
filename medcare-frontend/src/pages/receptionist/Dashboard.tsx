@@ -58,21 +58,18 @@ const ReceptionistDashboard: React.FC = () => {
 
         const appointments = appointmentsRes.data;
         
-        // Filter today's appointments - Fix for parameter types
         const today = appointments.filter((appointment: Appointment) => 
           isToday(parseISO(appointment.dateTime))
         ).sort((a: Appointment, b: Appointment) => 
           parseISO(a.dateTime).getTime() - parseISO(b.dateTime).getTime()
         );
         
-        // Filter upcoming appointments (excluding today) - Fix for parameter types
         const upcoming = appointments.filter((appointment: Appointment) => 
           parseISO(appointment.dateTime) > endOfDay(new Date())
         ).sort((a: Appointment, b: Appointment) => 
           parseISO(a.dateTime).getTime() - parseISO(b.dateTime).getTime()
-        ).slice(0, 5); // Get only the next 5
+        ).slice(0, 5); 
 
-        // Calculate statistics
         const newAppointments = appointments.filter((a: Appointment) => a.status === AppointmentStatus.NEW).length;
         const inProgressAppointments = appointments.filter((a: Appointment) => a.status === AppointmentStatus.IN_PROGRESS).length;
         const completedAppointments = appointments.filter((a: Appointment) => a.status === AppointmentStatus.COMPLETED).length;

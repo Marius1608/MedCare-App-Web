@@ -6,27 +6,23 @@ import Login from './pages/auth/Login';
 import NotFound from './pages/error/NotFound';
 import Unauthorized from './pages/error/Unauthorized';
 
-// Admin pages
+
 import AdminDashboard from './pages/admin/Dashboard';
 import UserManagement from './pages/admin/UserManagement';
 import DoctorManagement from './pages/admin/DoctorManagement';
 import ServiceManagement from './pages/admin/ServiceManagement';
 import Reports from './pages/admin/Reports';
 
-// Receptionist pages
 import ReceptionistDashboard from './pages/receptionist/Dashboard';
 import AppointmentManagement from './pages/receptionist/AppointmentManagement';
 
-// Define the UserRole type
 type UserRole = 'ADMIN' | 'RECEPTIONIST';
 
-// Define props interface for AuthGuard
 interface AuthGuardProps {
   children: React.ReactElement;
   allowedRoles: UserRole[];
 }
 
-// Auth guard component with proper type annotations
 const AuthGuard: React.FC<AuthGuardProps> = ({ children, allowedRoles }) => {
   const userStr = localStorage.getItem('user');
   if (!userStr) {

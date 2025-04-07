@@ -116,7 +116,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, appointment, on
     fetchData();
   }, []);
 
-  // Helper function to convert string or mixed values to number
   const toNumber = (value: string | number | undefined): number | undefined => {
     if (typeof value === 'number') return value;
     if (typeof value === 'string' && value !== '') return parseInt(value, 10);
@@ -151,7 +150,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, appointment, on
       setLoading(true);
       setError(null);
       
-      // Convert string IDs to numbers
       const doctorId = toNumber(values.doctorId);
       const serviceId = toNumber(values.serviceId);
       
@@ -191,7 +189,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, appointment, on
       }
       
       try {
-        // Find the complete doctor and service objects
+        
         const doctor = doctors.find(d => d.id === doctorId);
         const service = services.find(s => s.id === serviceId);
         

@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// No token interceptor needed anymore
 api.interceptors.response.use(
   (response) => response,
   (error) => {

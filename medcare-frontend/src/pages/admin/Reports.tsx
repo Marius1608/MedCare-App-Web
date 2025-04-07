@@ -94,7 +94,6 @@ const Reports: React.FC = () => {
       
       const response = await exportReportToCsv(formattedStartDate, formattedEndDate);
       
-      // Create a download link
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -128,7 +127,6 @@ const Reports: React.FC = () => {
       
       const response = await exportReportToXml(formattedStartDate, formattedEndDate);
       
-      // Create a download link
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -257,7 +255,6 @@ const Reports: React.FC = () => {
             </Tabs>
           </Box>
 
-          {/* Summary Tab */}
           {tabValue === 0 && (
             <Box>
               <Typography variant="h6" gutterBottom>
@@ -329,7 +326,6 @@ const Reports: React.FC = () => {
             </Box>
           )}
 
-          {/* Doctors Tab */}
           {tabValue === 1 && (
             <Box>
               <Typography variant="h6" gutterBottom>
@@ -370,7 +366,6 @@ const Reports: React.FC = () => {
             </Box>
           )}
 
-          {/* Services Tab */}
           {tabValue === 2 && (
             <Box>
               <Typography variant="h6" gutterBottom>
@@ -411,7 +406,6 @@ const Reports: React.FC = () => {
             </Box>
           )}
 
-          {/* Appointments Tab */}
           {tabValue === 3 && (
             <Box>
               <Typography variant="h6" gutterBottom>

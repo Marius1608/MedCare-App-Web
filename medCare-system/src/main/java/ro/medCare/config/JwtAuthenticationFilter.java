@@ -31,8 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenService jwtTokenService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
         logger.debug("Processing request: {} {}", request.getMethod(), request.getRequestURI());
@@ -40,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        // Skip authentication for OPTIONS requests (CORS preflight)
         if (request.getMethod().equals("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
@@ -53,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.debug("Extracted username: {}", username);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Get role from token
+
                     String role = jwtTokenService.extractAllClaims(jwt).get("role").toString();
                     logger.debug("User role: {}", role);
 

@@ -66,16 +66,13 @@ const AdminDashboard: React.FC = () => {
         const services = servicesRes.data as MedicalService[];
         const appointments = appointmentsRes.data as Appointment[];
         
-        // Sort appointments by date (newest first)
         const sortedAppointments = [...appointments].sort(
           (a: Appointment, b: Appointment) => 
             new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
         );
         
-        // Sort users by ID (newest first, assuming higher ID = newer)
         const sortedUsers = [...users].sort((a: User, b: User) => b.id - a.id);
         
-        // Count pending appointments (NEW and IN_PROGRESS)
         const pendingAppointments = appointments.filter(
           (a: Appointment) => a.status === AppointmentStatus.NEW || a.status === AppointmentStatus.IN_PROGRESS
         ).length;
@@ -88,8 +85,8 @@ const AdminDashboard: React.FC = () => {
           pendingAppointments
         });
         
-        setLatestAppointments(sortedAppointments.slice(0, 5)); // Latest 5 appointments
-        setRecentUsers(sortedUsers.slice(0, 5)); // Latest 5 users
+        setLatestAppointments(sortedAppointments.slice(0, 5)); 
+        setRecentUsers(sortedUsers.slice(0, 5)); 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -246,7 +243,6 @@ const AdminDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Quick Actions */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -302,7 +298,6 @@ const AdminDashboard: React.FC = () => {
           </Paper>
         </Grid>
 
-        {/* Recent Users & Latest Appointments */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2, height: '100%' }}>
             <Typography variant="h6" gutterBottom>

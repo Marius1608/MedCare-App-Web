@@ -36,14 +36,12 @@ const ReportFilter: React.FC<ReportFilterProps> = ({
 }) => {
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
-      // Set time to beginning of day
       onStartDateChange(startOfDay(date));
     }
   };
 
   const handleEndDateChange = (date: Date | null) => {
     if (date) {
-      // Set time to end of day
       onEndDateChange(endOfDay(date));
     }
   };

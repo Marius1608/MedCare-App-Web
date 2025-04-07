@@ -1,10 +1,6 @@
 // src/utils/auth.utils.ts
 import { User, UserRole } from '../types/user.types';
 
-/**
- * Get stored user from localStorage
- * @returns User object or null if not found
- */
 export const getStoredUser = (): User | null => {
   const storedUser = localStorage.getItem('user');
   if (!storedUser) return null;
@@ -16,65 +12,42 @@ export const getStoredUser = (): User | null => {
   }
 };
 
-/**
- * Get stored JWT token from localStorage
- * @returns Token string or null if not found
- */
 export const getStoredToken = (): string | null => {
   return localStorage.getItem('token');
 };
 
-/**
- * Store user and token in localStorage
- * @param user User object
- * @param token JWT token
- */
+
 export const storeUserAndToken = (user: User, token: string): void => {
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
 };
 
-/**
- * Clear user and token from localStorage
- */
+
 export const clearUserAndToken = (): void => {
   localStorage.removeItem('user');
   localStorage.removeItem('token');
 };
 
-/**
- * Check if user has a specific role
- * @param user User object
- * @param roles Array of roles to check
- * @returns Boolean indicating if user has any of the specified roles
- */
+
 export const hasRole = (user: User | null, roles: UserRole[]): boolean => {
   if (!user) return false;
   return roles.includes(user.role);
 };
 
-/**
- * Check if JWT token is expired
- * @param token JWT token
- * @returns Boolean indicating if token is expired
- */
+
 export const isTokenExpired = (token: string): boolean => {
   if (!token) return true;
   
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    const expiryTime = payload.exp * 1000; // Convert expiry time to milliseconds
+    const expiryTime = payload.exp * 1000; 
     return Date.now() >= expiryTime;
   } catch (error) {
     return true;
   }
 };
 
-/**
- * Parse JWT token payload
- * @param token JWT token
- * @returns Decoded payload or null if invalid
- */
+
 export const parseToken = (token: string): any | null => {
   if (!token) return null;
   

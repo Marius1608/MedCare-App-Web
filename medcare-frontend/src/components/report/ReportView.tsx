@@ -38,13 +38,10 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
     );
   }
 
-  // Format dates for display
   const startDateFormatted = format(new Date(report.startDate), 'MMM dd, yyyy');
   const endDateFormatted = format(new Date(report.endDate), 'MMM dd, yyyy');
 
-  // Prepare doctor statistics chart data
   const doctorChartData = Object.entries(report.doctorStatistics).map(([key, value]) => {
-    // Extract doctor name from the key - assuming key is in format "Doctor Name (Specialization)"
     const match = key.match(/(.*) \((.*)\)/);
     const name = match ? match[1] : key;
     return {
@@ -53,9 +50,7 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
     };
   });
 
-  // Prepare service statistics chart data
   const serviceChartData = Object.entries(report.serviceStatistics).map(([key, value]) => {
-    // Extract service name from the key - assuming key is in format "Service Name - $Price"
     const name = key.split(' - ')[0];
     return {
       name,
@@ -63,7 +58,6 @@ const ReportView: React.FC<ReportViewProps> = ({ report }) => {
     };
   });
 
-  // Count appointment statuses
   const statusCounts = report.appointments.reduce((acc, appointment) => {
     const status = appointment.status;
     acc[status] = (acc[status] || 0) + 1;

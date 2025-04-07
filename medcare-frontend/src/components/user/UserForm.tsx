@@ -80,7 +80,6 @@ const UserForm: React.FC<UserFormProps> = ({ open, user, onClose }) => {
           name: values.name,
           username: values.username,
           role: values.role,
-          // Only include password if it's provided or it's a new user
           ...(values.password || isNewUser ? { password: values.password } : {}),
         };
 

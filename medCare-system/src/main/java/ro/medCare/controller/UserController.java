@@ -26,7 +26,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        // Nu trimite parolele criptate în response
         users.forEach(user -> user.setPassword(null));
         return ResponseEntity.ok(users);
     }
@@ -35,7 +34,7 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         try {
             User user = userService.getUserById(id);
-            user.setPassword(null); // Nu trimite parola criptată în response
+            user.setPassword(null);
             return ResponseEntity.ok(user);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -46,7 +45,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.createUser(user);
-            createdUser.setPassword(null); // Nu trimite parola criptată în response
+            createdUser.setPassword(null);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,7 +59,7 @@ public class UserController {
         try {
             user.setId(id);
             User updatedUser = userService.updateUser(user);
-            updatedUser.setPassword(null); // Nu trimite parola criptată în response
+            updatedUser.setPassword(null);
             return ResponseEntity.ok(updatedUser);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();

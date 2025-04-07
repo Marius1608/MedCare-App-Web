@@ -102,6 +102,7 @@ public class AppointmentController {
     }
 
     private static class UpdateStatusRequest {
+
         private AppointmentStatus status;
 
         public AppointmentStatus getStatus() {

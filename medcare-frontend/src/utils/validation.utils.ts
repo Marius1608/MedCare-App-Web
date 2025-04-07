@@ -1,7 +1,6 @@
 // src/utils/validation.utils.ts
 import * as yup from 'yup';
 
-// Common validation schemas
 export const nameValidation = yup
   .string()
   .required('Name is required')
@@ -58,15 +57,13 @@ export const workHoursValidation = yup
     'Work hours must be in format HH:MM-HH:MM'
   );
 
-// Helper function to parse validation errors from API
 export const parseValidationErrors = (errorMessage: string): Record<string, string> => {
   const errors: Record<string, string> = {};
   
   try {
-    // Try to parse if error message is JSON
+   
     const errorObj = JSON.parse(errorMessage);
     
-    // Process different error formats
     if (Array.isArray(errorObj)) {
       errorObj.forEach(error => {
         if (error.field && error.message) {
@@ -79,7 +76,6 @@ export const parseValidationErrors = (errorMessage: string): Record<string, stri
       });
     }
   } catch (e) {
-    // If not JSON, try to extract field names from error string
     const fieldErrors = errorMessage.match(/[a-zA-Z]+: [^,;]+(,|;|$)/g);
     
     if (fieldErrors) {
@@ -88,7 +84,6 @@ export const parseValidationErrors = (errorMessage: string): Record<string, stri
         errors[field.trim()] = message.replace(/[,;]$/, '').trim();
       });
     } else {
-      // If no structured format detected, return generic error
       errors.general = errorMessage;
     }
   }

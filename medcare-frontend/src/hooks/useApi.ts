@@ -50,7 +50,6 @@ export function useApi<T = any>(
       } catch (err) {
         const error = err as AxiosError<ErrorResponse>;
         
-        // Check if error is a 401 (Unauthorized)
         if (error.response?.status === 401) {
           logout();
           setState({

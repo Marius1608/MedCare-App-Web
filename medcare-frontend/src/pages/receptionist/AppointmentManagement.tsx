@@ -58,16 +58,16 @@ const AppointmentManagement: React.FC = () => {
 
   const filterAppointments = (appointments: Appointment[], tabIndex: number) => {
     switch (tabIndex) {
-      case 0: // All
+      case 0: 
         setFilteredAppointments(appointments);
         break;
-      case 1: // New
+      case 1: 
         setFilteredAppointments(appointments.filter(a => a.status === AppointmentStatus.NEW));
         break;
-      case 2: // In Progress
+      case 2: 
         setFilteredAppointments(appointments.filter(a => a.status === AppointmentStatus.IN_PROGRESS));
         break;
-      case 3: // Completed
+      case 3: 
         setFilteredAppointments(appointments.filter(a => a.status === AppointmentStatus.COMPLETED));
         break;
       default:

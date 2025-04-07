@@ -14,7 +14,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-// Form TextField with error handling
+
 interface FormTextFieldProps extends Omit<TextFieldProps, 'error'> {
   name: string;
   label: string;
@@ -48,7 +48,6 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   );
 };
 
-// Form Select with error handling
 interface FormSelectProps {
   name: string;
   label: string;
@@ -90,7 +89,6 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   );
 };
 
-// Form DateTimePicker with error handling
 interface FormDateTimePickerProps {
   name: string;
   label: string;
