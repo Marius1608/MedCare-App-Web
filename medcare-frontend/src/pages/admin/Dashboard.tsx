@@ -1,9 +1,7 @@
-// src/pages/admin/Dashboard.tsx
+//src/pages/admin/Dashboard.tsx to use the new StatsCard component
 import React, { useState, useEffect } from 'react';
 import { 
   Box, 
-  Card, 
-  CardContent, 
   Grid, 
   Typography, 
   Paper,
@@ -15,6 +13,7 @@ import {
   ListItemAvatar,
   Avatar,
   Chip,
+  useTheme,
 } from '@mui/material';
 import {
   PeopleAlt as PeopleIcon,
@@ -22,7 +21,6 @@ import {
   MedicalServices as ServiceIcon,
   CalendarMonth as AppointmentIcon,
   Assessment as ReportIcon,
-  Person as PersonIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -36,9 +34,11 @@ import { User } from '../../types/user.types';
 import { Doctor } from '../../types/doctor.types';
 import { MedicalService } from '../../types/service.types';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import StatsCard from '../../components/common/StatsCard';
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     users: 0,
@@ -122,8 +122,8 @@ const AdminDashboard: React.FC = () => {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper sx={{ p: 3, mb: 3 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
+          <Paper sx={{ p: 4, mb: 3, borderRadius: 2 }}>
+            <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
               Admin Dashboard
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
@@ -133,122 +133,57 @@ const AdminDashboard: React.FC = () => {
         </Grid>
 
         {/* Stats Cards */}
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <PeopleIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-              <Typography variant="h4" component="div">
-                {stats.users}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Users
-              </Typography>
-              <Button 
-                variant="text" 
-                size="small" 
-                onClick={() => handleNavigate('/admin/users')}
-                sx={{ mt: 1 }}
-              >
-                Manage
-              </Button>
-            </CardContent>
-          </Card>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <StatsCard 
+            title="Users" 
+            value={stats.users} 
+            icon={<PeopleIcon sx={{ fontSize: 32 }} />} 
+            color={theme.palette.primary.main}
+          />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <DoctorIcon sx={{ fontSize: 48, color: 'secondary.main', mb: 1 }} />
-              <Typography variant="h4" component="div">
-                {stats.doctors}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Doctors
-              </Typography>
-              <Button 
-                variant="text" 
-                size="small" 
-                onClick={() => handleNavigate('/admin/doctors')}
-                sx={{ mt: 1 }}
-              >
-                Manage
-              </Button>
-            </CardContent>
-          </Card>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <StatsCard 
+            title="Doctors" 
+            value={stats.doctors} 
+            icon={<DoctorIcon sx={{ fontSize: 32 }} />} 
+            color={theme.palette.secondary.main}
+          />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <ServiceIcon sx={{ fontSize: 48, color: 'success.main', mb: 1 }} />
-              <Typography variant="h4" component="div">
-                {stats.services}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Services
-              </Typography>
-              <Button 
-                variant="text" 
-                size="small" 
-                onClick={() => handleNavigate('/admin/services')}
-                sx={{ mt: 1 }}
-              >
-                Manage
-              </Button>
-            </CardContent>
-          </Card>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <StatsCard 
+            title="Services" 
+            value={stats.services} 
+            icon={<ServiceIcon sx={{ fontSize: 32 }} />} 
+            color={theme.palette.success.main}
+          />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <AppointmentIcon sx={{ fontSize: 48, color: 'info.main', mb: 1 }} />
-              <Typography variant="h4" component="div">
-                {stats.appointments}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Appointments
-              </Typography>
-              <Button 
-                variant="text" 
-                size="small" 
-                onClick={() => handleNavigate('/receptionist/appointments')}
-                sx={{ mt: 1 }}
-              >
-                View
-              </Button>
-            </CardContent>
-          </Card>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <StatsCard 
+            title="Appointments" 
+            value={stats.appointments} 
+            icon={<AppointmentIcon sx={{ fontSize: 32 }} />} 
+            color={theme.palette.info.main}
+          />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <ReportIcon sx={{ fontSize: 48, color: 'warning.main', mb: 1 }} />
-              <Typography variant="h4" component="div">
-                {stats.pendingAppointments}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Pending Appointments
-              </Typography>
-              <Button 
-                variant="text" 
-                size="small" 
-                onClick={() => handleNavigate('/admin/reports')}
-                sx={{ mt: 1 }}
-              >
-                Reports
-              </Button>
-            </CardContent>
-          </Card>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <StatsCard 
+            title="Pending" 
+            value={stats.pendingAppointments} 
+            icon={<ReportIcon sx={{ fontSize: 32 }} />} 
+            color={theme.palette.warning.main}
+          />
         </Grid>
 
         <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+          <Paper sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Quick Actions
             </Typography>
-            <Divider sx={{ mb: 2 }} />
+            <Divider sx={{ mb: 3 }} />
             <Grid container spacing={2}>
               <Grid item xs={6} sm={3} md={2}>
                 <Button 
@@ -256,7 +191,7 @@ const AdminDashboard: React.FC = () => {
                   fullWidth 
                   startIcon={<AddIcon />}
                   onClick={() => handleNavigate('/admin/users')}
-                  sx={{ mb: 1 }}
+                  sx={{ py: 1.5, borderRadius: 2 }}
                 >
                   Add User
                 </Button>
@@ -267,7 +202,7 @@ const AdminDashboard: React.FC = () => {
                   fullWidth 
                   startIcon={<AddIcon />}
                   onClick={() => handleNavigate('/admin/doctors')}
-                  sx={{ mb: 1 }}
+                  sx={{ py: 1.5, borderRadius: 2 }}
                 >
                   Add Doctor
                 </Button>
@@ -278,7 +213,7 @@ const AdminDashboard: React.FC = () => {
                   fullWidth 
                   startIcon={<AddIcon />}
                   onClick={() => handleNavigate('/admin/services')}
-                  sx={{ mb: 1 }}
+                  sx={{ py: 1.5, borderRadius: 2 }}
                 >
                   Add Service
                 </Button>
@@ -289,7 +224,7 @@ const AdminDashboard: React.FC = () => {
                   fullWidth 
                   startIcon={<ReportIcon />}
                   onClick={() => handleNavigate('/admin/reports')}
-                  sx={{ mb: 1 }}
+                  sx={{ py: 1.5, borderRadius: 2 }}
                 >
                   Generate Report
                 </Button>
@@ -299,8 +234,8 @@ const AdminDashboard: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
+          <Paper sx={{ p: 3, height: '100%', borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Recent Users
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -314,18 +249,26 @@ const AdminDashboard: React.FC = () => {
             ) : (
               <List>
                 {recentUsers.map((user) => (
-                  <ListItem key={user.id} divider>
+                  <ListItem key={user.id} divider sx={{ px: 2, py: 1.5 }}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'primary.main' }}>
-                        <PersonIcon />
+                      <Avatar sx={{ bgcolor: theme.palette.primary.light }}>
+                        {user.name.charAt(0)}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={user.name}
+                      primary={<Typography variant="subtitle1" fontWeight={500}>{user.name}</Typography>}
                       secondary={
-                        <>
-                          {user.username} - {user.role}
-                        </>
+                        <Box component="span" sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            {user.username}
+                          </Typography>
+                          <Chip 
+                            label={user.role} 
+                            size="small" 
+                            color={user.role === 'ADMIN' ? 'error' : 'primary'}
+                            sx={{ ml: 1, height: 24 }}
+                          />
+                        </Box>
                       }
                     />
                   </ListItem>
@@ -336,8 +279,8 @@ const AdminDashboard: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
+          <Paper sx={{ p: 3, height: '100%', borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Latest Appointments
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -351,21 +294,27 @@ const AdminDashboard: React.FC = () => {
             ) : (
               <List>
                 {latestAppointments.map((appointment) => (
-                  <ListItem key={appointment.id} divider>
+                  <ListItem key={appointment.id} divider sx={{ px: 2, py: 1.5 }}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'info.main' }}>
+                      <Avatar sx={{ bgcolor: theme.palette.info.light }}>
                         {appointment.patientName.charAt(0)}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={appointment.patientName}
+                      primary={<Typography variant="subtitle1" fontWeight={500}>{appointment.patientName}</Typography>}
                       secondary={
                         <>
-                          <Typography component="span" variant="body2" color="text.primary">
-                            {appointment.doctor.name} - {appointment.service.name}
-                          </Typography>
-                          <br />
-                          {format(parseISO(appointment.dateTime), 'MMM dd, yyyy HH:mm')} - {getStatusChip(appointment.status)}
+                          <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                            <Typography component="span" variant="body2" color="text.secondary">
+                              {appointment.doctor.name} • {appointment.service.name}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              {format(parseISO(appointment.dateTime), 'MMM dd, yyyy HH:mm')}
+                            </Typography>
+                            {getStatusChip(appointment.status)}
+                          </Box>
                         </>
                       }
                     />

@@ -1,4 +1,4 @@
-// src/theme/index.ts
+//src/theme/index.ts with the updated theme
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({

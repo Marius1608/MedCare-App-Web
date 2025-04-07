@@ -1,6 +1,5 @@
-// src/components/layout/MainLayout.tsx
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -23,10 +22,13 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-
-const drawerWidth = 240;
+import Badge from '@mui/material/Badge';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import { Button } from '@mui/material';
+const drawerWidth = 260;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -45,13 +47,43 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     }),
     marginLeft: 0,
   }),
+  backgroundColor: theme.palette.background.default,
+  minHeight: '100vh',
+}));
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
+
+const Logo = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2, 2),
+  '& svg': {
+    marginRight: theme.spacing(1),
+    color: theme.palette.primary.main,
+  },
+}));
+
+const StyledListItem = styled(ListItem)<{ selected?: boolean }>(({ theme, selected }) => ({
+  margin: theme.spacing(0.5, 1),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: selected ? theme.palette.primary.light + '20' : 'transparent',
+  '&:hover': {
+    backgroundColor: selected ? theme.palette.primary.light + '30' : theme.palette.action.hover,
+  },
 }));
 
 const MainLayout: React.FC = () => {
   const { user, logout, isAdmin } = useAuth();
   const theme = useTheme();
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(true);
+  const location = useLocation();
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -85,6 +117,11 @@ const MainLayout: React.FC = () => {
 
   const menuItems = isAdmin ? adminMenuItems : receptionistMenuItems;
 
+  // Check if a menu item is active
+  const isMenuActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
@@ -101,9 +138,14 @@ const MainLayout: React.FC = () => {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             MedCare System
           </Typography>
-          <Typography variant="body1" sx={{ mr: 2 }}>
-            {user?.name} ({user?.role})
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="body2" sx={{ mr: 2 }}>
+              {user?.name}
+            </Typography>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main, width: 40, height: 40 }}>
+              {user?.name?.charAt(0) || 'U'}
+            </Avatar>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -119,40 +161,88 @@ const MainLayout: React.FC = () => {
         anchor="left"
         open={open}
       >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <Box sx={{ p: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Box>
-          <Divider />
-          <List>
-            {menuItems.map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton onClick={() => handleNavigation(item.path)}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Box sx={{ flexGrow: 1 }} />
-          <Divider />
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleLogout}>
-                <ListItemIcon>
-                  <LogoutIcon />
+        <DrawerHeader>
+          <Logo>
+            <HealthAndSafetyIcon sx={{ fontSize: 28 }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
+              MedCare
+            </Typography>
+          </Logo>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+
+        <Box sx={{ p: 2 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  bgcolor: user?.role === 'ADMIN' ? theme.palette.error.main : theme.palette.success.main,
+                  borderRadius: '50%',
+                  border: `2px solid ${theme.palette.background.paper}`,
+                }}
+              />
+            }
+          >
+            <Avatar sx={{ width: 56, height: 56, bgcolor: theme.palette.primary.main, mb: 1 }}>
+              {user?.name?.charAt(0) || 'U'}
+            </Avatar>
+          </Badge>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            {user?.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {user?.role}
+          </Typography>
+        </Box>
+
+        <Divider sx={{ my: 1 }} />
+
+        <List component="nav" sx={{ px: 1 }}>
+          {menuItems.map((item) => (
+            <StyledListItem key={item.text} disablePadding selected={isMenuActive(item.path)}>
+              <ListItemButton
+                onClick={() => handleNavigation(item.path)}
+                sx={{ borderRadius: 'inherit' }}
+              >
+                <ListItemIcon sx={{ color: isMenuActive(item.path) ? theme.palette.primary.main : 'inherit' }}>
+                  {item.icon}
                 </ListItemIcon>
-                <ListItemText primary="Logout" />
+                <ListItemText
+                  primary={item.text}
+                  primaryTypographyProps={{
+                    fontWeight: isMenuActive(item.path) ? 600 : 'normal',
+                    color: isMenuActive(item.path) ? theme.palette.primary.main : 'inherit',
+                  }}
+                />
               </ListItemButton>
-            </ListItem>
-          </List>
+            </StyledListItem>
+          ))}
+        </List>
+
+        <Box sx={{ flexGrow: 1 }} />
+        <Divider />
+        
+        <Box sx={{ p: 2 }}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<LogoutIcon />}
+            onClick={handleLogout}
+            sx={{ borderRadius: theme.shape.borderRadius }}
+          >
+            Logout
+          </Button>
         </Box>
       </Drawer>
       <Main open={open}>
-        <Toolbar />
+        <DrawerHeader />
         <Outlet />
       </Main>
     </Box>

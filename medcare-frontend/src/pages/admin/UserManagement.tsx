@@ -1,4 +1,4 @@
-//src/pages/admin/UserManagement.tsx
+// src/pages/admin/UserManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   Box, 
@@ -6,16 +6,23 @@ import {
   Typography, 
   Paper,
   Snackbar,
-  Alert
+  Alert,
+  IconButton,
+  Tooltip,
+  useTheme
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { getAllUsers, deleteUser } from '../../api/user.api';
 import UserForm from '../../components/user/UserForm';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { User } from '../../types/user.types';
+import StyledDataGrid from '../../components/common/StyledDataGrid';
 
 const UserManagement: React.FC = () => {
+  const theme = useTheme();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -88,31 +95,46 @@ const UserManagement: React.FC = () => {
       field: 'role', 
       headerName: 'Role', 
       width: 150,
-      valueGetter: (params) => params.row.role || '' 
+      renderCell: (params) => (
+        <Box sx={{ 
+          bgcolor: params.row.role === 'ADMIN' ? theme.palette.error.light + '20' : theme.palette.primary.light + '20',
+          color: params.row.role === 'ADMIN' ? theme.palette.error.dark : theme.palette.primary.dark,
+          py: 0.5,
+          px: 1.5,
+          borderRadius: 1,
+          fontWeight: 500,
+          fontSize: '0.8125rem'
+        }}>
+          {params.row.role}
+        </Box>
+      )
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 120,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
         <Box>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => handleEditUser(params.row as User)}
-            sx={{ mr: 1 }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            onClick={() => handleDeleteClick(params.row as User)}
-          >
-            Delete
-          </Button>
+          <Tooltip title="Edit">
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() => handleEditUser(params.row as User)}
+              sx={{ mr: 1 }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              color="error"
+              size="small"
+              onClick={() => handleDeleteClick(params.row as User)}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
@@ -120,31 +142,30 @@ const UserManagement: React.FC = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" component="h2">
-          User Management
-        </Typography>
+      <Paper sx={{ p: 3, mb: 3, borderRadius: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box>
+          <Typography variant="h5" component="h1" fontWeight="bold">
+            User Management
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Add, edit, and manage user accounts in the system
+          </Typography>
+        </Box>
         <Button 
           variant="contained" 
           startIcon={<AddIcon />}
           onClick={handleAddUser}
+          sx={{ borderRadius: 2, px: 3 }}
         >
           Add User
         </Button>
       </Paper>
 
-      <Paper sx={{ p: 2, height: 'calc(100vh - 220px)' }}>
-        <DataGrid
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <StyledDataGrid
           rows={users}
           columns={columns}
           loading={loading}
-          pagination
-          autoHeight
-          disableRowSelectionOnClick
-          pageSizeOptions={[5, 10, 25]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
         />
       </Paper>
 
@@ -170,12 +191,12 @@ const UserManagement: React.FC = () => {
         onClose={handleAlertClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-         {alertMessage ? (
-                  <Alert onClose={handleAlertClose} severity={alertMessage.type} sx={{ width: '100%' }}>
-                    {alertMessage.message}
-                  </Alert>
-          ) : undefined}
-        </Snackbar>
+        {alertMessage ? (
+          <Alert onClose={handleAlertClose} severity={alertMessage.type} sx={{ width: '100%' }}>
+            {alertMessage.message}
+          </Alert>
+        ) : undefined}
+      </Snackbar>
     </Box>
   );
 };

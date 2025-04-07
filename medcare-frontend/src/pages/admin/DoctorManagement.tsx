@@ -1,4 +1,4 @@
-// src/pages/admin/DoctorManagement.tsx
+//src/pages/admin/DoctorManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   Box, 
@@ -6,16 +6,23 @@ import {
   Typography, 
   Paper,
   Snackbar,
-  Alert
+  Alert,
+  IconButton,
+  Tooltip,
+  useTheme
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { getAllDoctors, deleteDoctor } from '../../api/doctor.api';
 import DoctorForm from '../../components/doctor/DoctorForm';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { Doctor } from '../../types/doctor.types';
+import StyledDataGrid from '../../components/common/StyledDataGrid';
 
 const DoctorManagement: React.FC = () => {
+  const theme = useTheme();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -88,26 +95,29 @@ const DoctorManagement: React.FC = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 120,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
         <Box>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => handleEditDoctor(params.row as Doctor)}
-            sx={{ mr: 1 }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            onClick={() => handleDeleteClick(params.row as Doctor)}
-          >
-            Delete
-          </Button>
+          <Tooltip title="Edit">
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() => handleEditDoctor(params.row as Doctor)}
+              sx={{ mr: 1 }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              color="error"
+              size="small"
+              onClick={() => handleDeleteClick(params.row as Doctor)}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
@@ -115,31 +125,30 @@ const DoctorManagement: React.FC = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" component="h2">
-          Doctor Management
-        </Typography>
+      <Paper sx={{ p: 3, mb: 3, borderRadius: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box>
+          <Typography variant="h5" component="h1" fontWeight="bold">
+            Doctor Management
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Add, edit, and manage doctors in the system
+          </Typography>
+        </Box>
         <Button 
           variant="contained" 
           startIcon={<AddIcon />}
           onClick={handleAddDoctor}
+          sx={{ borderRadius: 2, px: 3 }}
         >
           Add Doctor
         </Button>
       </Paper>
 
-      <Paper sx={{ p: 2, height: 'calc(100vh - 220px)' }}>
-        <DataGrid
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <StyledDataGrid
           rows={doctors}
           columns={columns}
           loading={loading}
-          pagination
-          autoHeight
-          disableRowSelectionOnClick
-          pageSizeOptions={[5, 10, 25]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
         />
       </Paper>
 

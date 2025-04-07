@@ -40,7 +40,7 @@ import { ReportDTO } from '../../types/report.types';
 
 const Reports: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(
-    new Date(new Date().getFullYear(), new Date().getMonth(), 1) // First day of current month
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
   );
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [reportData, setReportData] = useState<ReportDTO | null>(null);
@@ -379,7 +379,6 @@ const Reports: React.FC = () => {
                 {Object.entries(reportData.serviceStatistics || {})
                   .sort((a, b) => b[1] - a[1])
                   .map(([serviceKey, count], index) => {
-                    // Find the service object from the appointments
                     const serviceAppointment = reportData.appointments.find(
                       a => a.service && a.service.id.toString() === serviceKey
                     );
