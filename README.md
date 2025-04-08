@@ -1,6 +1,5 @@
 Overview
 MedCare is a full-featured medical clinic management system designed to streamline the operations of healthcare facilities. The system provides separate interfaces for administrators and receptionists, each with appropriate access levels and functionality to manage appointments, doctor schedules, medical services, and generate reports.
-Features
 
 
 Admin Features
