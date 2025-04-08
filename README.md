@@ -32,17 +32,17 @@ Data Visualization: Statistics and charts for better decision making
 Technology Stack
 
 Backend
-Java 17
-Spring Boot 3.x
-Spring Security with JWT authentication
-Spring Data JPA for database interactions
-MySQL database
-Lombok for reducing boilerplate code
+Java 17 ,
+Spring Boot 3.x ,
+Spring Security with JWT authentication ,
+Spring Data JPA for database interactions ,
+MySQL database ,
+Lombok for reducing boilerplate code ,
 
 Frontend
-React 18 with TypeScript
-Material-UI for component design
-React Router for navigation
-Axios for API communication
-Recharts for data visualization
-Formik with Yup for form handling and validation
+React 18 with TypeScript ,
+Material-UI for component design ,
+React Router for navigation ,
+Axios for API communication ,
+Recharts for data visualization ,
+Formik with Yup for form handling and validation ,
